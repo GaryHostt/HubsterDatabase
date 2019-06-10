@@ -12,7 +12,10 @@ credentials.txt
 .DS_Store
 
 #docker image
-.Dockerfile
+Dockerfile
 
 #passwords
 passwords.py
+
+#pything
+/__pycache__
