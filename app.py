@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 import cx_Oracle
 from passwords import DB, DB_USER, DB_PASSWORD
+from flask import render_template
+from flask import request
 
 # declare constants for flask app
 HOST = '0.0.0.0'
@@ -87,6 +89,13 @@ def createHubster():
         data.append(row)
     cursor.close()
     return jsonify(status='success', db_version=connection.version, data=data)
+
+
+@app.route('/api/create/pillar', methods=['POST'])
+def home():
+    if request.form:
+        print(request.form)
+    return render_template("home.html")
 
 #UPDATE/PUT APIs below
 
