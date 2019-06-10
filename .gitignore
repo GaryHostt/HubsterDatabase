@@ -1,0 +1,18 @@
+# file to keep db credentials
+credentials.txt
+/Wallet_CERTDB
+#my wallet ignored via git rm --cached FILENAME
+
+
+# IDEs and editors
+.idea
+/.idea
+
+# System Files
+.DS_Store
+
+#docker image
+.Dockerfile
+
+#passwords
+passwords.py
