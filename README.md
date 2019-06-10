@@ -2,6 +2,20 @@
 
 This project is a flask api built with Python, Flask and Oracle Autonomous Data Warehouse to be used as a starter template.
 
+# Note to contributing Hubsters
+
+Message aamacdon on slack for details on connecting to the compute instance, to the database in SQL Developer, and any other connection issues. Let's use this data and infrastructure! 
+
+This repo has a CI/CD pipeline to the running compute instance via Jenkins. So don't worry about installing everything - just push!
+
+# Use case ideas
+
+1. Twilio birthday reminder application
+2. Room reservation
+3. Event planning
+4. Survey question answers
+5. ???
+
 ## Built with
 
 * [Python 3](https://www.python.org/)
@@ -51,7 +65,7 @@ Sudo scp - r /Users/aamacdon/Desktop/autonomous_coaching/Wallet_AutoDB opc@132.1
 Sudo scp - r /Users/aamacdon/Desktop/autonomous_coaching/Wallet_AutoDB opc@132.145.172.19:/usr/lib/oracle/18.3/client64/lib/network/admin
 
 
-Updating Python API
+###Updating Python API
 * Update `app.py` with the ATP credentials
 * Or create a passwords.py file in the project directory with your information
 * Update the endpoints to pull relevant data using SQL
