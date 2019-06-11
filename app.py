@@ -22,14 +22,17 @@ print("This API is now connected with a Jenkins CI/CD Pipeline")
 #DB_PASSWORD = '***'
 
 connection = cx_Oracle.connect(DB_USER, DB_PASSWORD, DB)
+cur = connection.cursor()
+
+'''
 
 # api endpoint returning version of database from automonous data warehouse
-@app.route('/api/version', methods=['GET'])
-def version():
-    return jsonify(status='success', db_version=connection.version)
-    
-# sample api endpoint returning data from ATP
+
 # update sql based on your database tables
+
+@app.route(“/”)
+def home():
+    return render_template(“home.html”)
 
 @app.route('/api/test', methods=['GET'])
 def test():
@@ -40,8 +43,89 @@ def test():
     cursor.close()
     return jsonify(status='success', db_version=connection.version, data=data)
 
-#api endpoints from original above this line
-#VIEW/GET APIs below
+
+likely need SQLAlchemy with this
+class Hubster(Model):
+    HubsterID = Column(db.Integer, primary_key=True)
+    FirstName = Column(db.String(220),unique=False)
+    LastName = Column(db.String(220),unique=False)
+    PillarID = Column(db.Integer, foreign_key=True)
+    ManagerID = Column(db.Integer, foreign_key=True)
+    Seat = db.Column(db.Integer,unique=False)
+    Phone = db.Column(db.String(220),unique=True)
+    Email = db.Column(db.String(220),unique=True)
+    Neighborhood = db.Column(db.String(220),unique=False)
+    Birthday = db.Column(db.String(220),unique=False)
+
+    def __init__(self, FirstName,LastName, Pillar, Seat, Phone, Email, Neighborhood, Birthday):
+        self.FirstName = FirstName
+        self.LastName = LastName
+        self.Pillar = PillarID
+        self.Seat = Seat
+        self.Phone = Phone
+        self.Email = Email
+        self.Neighborhood = Neighborhood
+        self.Birthday = Birthday
+
+class Managers(Model):
+    ManagerID = db.Column(db.Integer, primary_key=True)
+    FirstName = db.Column(db.String(220),unique=False)
+    LastName = db.Column(db.String(220),unique=False)
+    Office = db.Column(db.String(220),unique=False)
+    Phone = db.Column(db.String(220),unique=True)
+    Email = db.Column(db.String(220),unique=True)
+
+class Pillars(Model):
+    PillarID = db.Column(db.Integer, primary_key=True)
+    PillarName = db.Column(db.String(220),unique=False)
+    ManagerID = db.Column(db.Integer, foreign_key=True)
+
+class Rooms(Model):
+    HubRoomNumber = db.Column(db.Integer, primary_key=True)
+    Capacity = db.Column(db.Integer, unique=False)
+
+    if you go the SQLalchemy route:
+          
+        #hubster = Hubster(newFirstName, newLastName, newEmail)
+
+@app.route('/api/version', methods=['GET'])
+def version():
+        cur.execute ("SELECT * FROM v$version")
+        row = cur.fetchone()
+        print ("server version:")
+
+    '''
+#SQLAlchemy stuff above
+#functional? APIs below
+
+@app.route('/api/version', methods=['GET'])
+def version():
+    return jsonify(status='success', db_version=connection.version)
+
+
+@app.route('/api/hubsters', methods=['GET', 'POST'])
+def readAndWriteHubsters():
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data=[]
+        
+        for row in cursor.execute("SELECT * FROM HUBHUBSTERS"):
+            data.append(row)
+        return jsonify(status='success', db_version=connection.version, data=data)
+
+    if request.method =='POST':
+        FirstName = request.form['FirstName']
+        LastName = request.form['LastName']
+        Email = request.form['Email']
+        Seat = request.form['Seat']
+        Phone = request.form['Phone']
+        Neighborhood = request.form['Neighborhood']
+        Birthday = request.form['Birthday']
+        cursor.execute("INSERT INTO HUBHUBSTERS (FirstName, LastName, Seat, Phone, Email, Neighborhood, Birthday) VALUES ('Santa', 'Claus', 9999999, 1234, 'email@email.com', 'Sawtelle', '12345')")
+    connection.commit()
+    cursor.close()
+    return "yellow dogs run"
+##old working apis
 
 @app.route('/api/view/hubsters', methods=['GET'])
 def viewHubsters():
