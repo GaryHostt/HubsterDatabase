@@ -100,12 +100,15 @@ def version():
 
 
 @app.route('/api/hubsters3', methods=['POST'])
-def readAndWriteHubsters3(p_ManagerID, p_PillarID, p_PillarName):
+def readAndWriteHubsters3():
     cursor = connection.cursor()
     if request.method == 'POST':
-        args = ("p_ManagerID"=77, "p_PillarID"=77, "p_PillarName"='BUNNIES')
-        result_args = cursor.callproc('HUBPILLARS_TAPI.ins', args)
-        return str(result_args)
+        data = request.get_json()
+        print (data)
+        p_ManagerID = data['ManagerID']
+        p_PillarName = data['PillarName']
+        cursor.callproc('HUBPILLARS_TAPI.ins', [p_ManagerID, p_PillarName])
+        return str(data)
     connection.commit()
     cursor.close()
 
