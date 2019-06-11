@@ -99,6 +99,44 @@ def version():
     return jsonify(status='success', db_version=connection.version)
 
 
+@app.route('/api/hubsters3', methods=['POST'])
+def readAndWriteHubsters3(p_ManagerID, p_PillarID, p_PillarName):
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        args = ("p_ManagerID"=77, "p_PillarID"=77, "p_PillarName"='BUNNIES')
+        result_args = cursor.callproc('HUBPILLARS_TAPI.ins', args)
+        return str(result_args)
+    connection.commit()
+    cursor.close()
+
+@app.route('/api/hubsters2', methods=['POST'])
+def readandWriteHubsters2():
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        FirstName = request.form['FirstName']
+        LastName = request.form['LastName']
+        Email = request.form['Email']
+        Seat = request.form['Seat']
+        Phone = request.form['Phone']
+        Neighborhood = request.form['Neighborhood']
+        Birthday = request.form['Birthday']
+        try:
+            cursor.execute("INSERT INTO HUBHUBSTERS (FirstName, LastName, Seat, Phone, Email, Neighborhood, Birthday) VALUES (%a, %b, %c, %d, %e, %f, %g)", {"a":FirstName, "b":LastName, "c":Seat, "d":Phone, "e":Email, "f":Neighborhood, "g":Birthday})
+        except cx_Oracle.DatabaseError as e:
+            error, = e.args
+            if error.code == 955:
+                print('Table already exists')
+            if error.code == 1031:
+                print("Insufficient privileges - are you sure you're using the owner account?")
+            if error.code == 1036:
+                return "You couldn't live with your failure, and where did that bring you? Back to me"
+            print(error.code)
+            print(error.message)
+            print(error.context)
+    connection.commit()
+    cursor.close()
+    return "blue dogs run"
+
 @app.route('/api/hubsters', methods=['GET', 'POST'])
 def readAndWriteHubsters():
     cursor = connection.cursor()
@@ -122,16 +160,6 @@ def readAndWriteHubsters():
     cursor.close()
     return "yellow dogs run"
 ##old working apis
-
-@app.route('/api/view/hubsters', methods=['GET'])
-def viewHubsters():
-    data=[]
-    cursor = connection.cursor()
-    for row in cursor.execute("SELECT * FROM HUBHUBSTERS"):
-        data.append(row)
-    cursor.close()
-    return jsonify(status='success', db_version=connection.version, data=data)
-
 @app.route('/api/view/pillars', methods=['GET'])
 def viewPillars():
     data=[]
