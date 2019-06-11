@@ -30,10 +30,6 @@ cur = connection.cursor()
 
 # update sql based on your database tables
 
-@app.route(“/”)
-def home():
-    return render_template(“home.html”)
-
 @app.route('/api/test', methods=['GET'])
 def test():
     data=[]
