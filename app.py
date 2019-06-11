@@ -98,17 +98,27 @@ def version():
 def version():
     return jsonify(status='success', db_version=connection.version)
 
+@app.route('/api/hubsters4', methods=['POST'])
+def readAndWriteHubsters4():
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        p_MANAGERID = request.form['MANAGERID']
+        p_PILLARNAME = request.form['PILLARName']
+        cursor.callproc('INSERTPILLAR', (p_MANAGERID, p_PILLARNAME))
+        for result in cursor.stored_results():
+            print(result.fetchall())
+    connection.commit()
+    cursor.close()
 
 @app.route('/api/hubsters3', methods=['POST'])
 def readAndWriteHubsters3():
     cursor = connection.cursor()
     if request.method == 'POST':
         data = request.get_json()
-        print (data)
-        p_ManagerID = data['ManagerID']
-        p_PillarName = data['PillarName']
-        cursor.callproc('HUBPILLARS_TAPI.ins', [p_ManagerID, p_PillarName])
-        return str(data)
+        p_MANAGERID = data['ManagerID']
+        p_PILLARNAME = data['PillarName']
+        results=cursor.callproc('HUBPILLARS_TAPI.ins', (p_MANAGERID, p_PILLARNAME))
+        return (results)
     connection.commit()
     cursor.close()
 
