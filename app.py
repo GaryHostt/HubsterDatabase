@@ -30,7 +30,7 @@ cur = connection.cursor()
 def version():
     return jsonify(status='success', db_version=connection.version)
 
-@app.route('/api/hubsters', methods=['GET', 'POST'])
+@app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
     cursor = connection.cursor()
     if request.method =='GET':
@@ -50,6 +50,23 @@ def readAndWriteHubsters():
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
         cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
+        for result in cursor.stored_results():
+            print(result.fetchall())
+    connection.commit()
+    cursor.close()
+
+    if request.method == 'PUT':
+        json_data = request.get_json(force=True)
+        p_HubsterID = json_data['HubsterID']
+        p_FirstName = json_data['FirstName']
+        p_LastName = json_data['LastName']
+        p_PillarID = json_data['PillarID']
+        p_ManagerID = json_data['ManagerID']
+        p_Seat = json_data['Seat']
+        p_Phone = json_data['Phone']
+        p_Neighborhood = json_data['Neighborhood']
+        p_Birthday = json_data['Birthday']
+        cursor.callproc('INSERTHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
         for result in cursor.stored_results():
             print(result.fetchall())
     connection.commit()
@@ -130,6 +147,31 @@ BEGIN
     
     Commit;
     
+End;
+
+create or replace PROCEDURE updateHubster(
+p_HubsterID in HUBHUBSTERS.HUBSTERID%type
+,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
+,p_LastName in HUBHUBSTERS.LASTNAME%type default null
+,p_PillarID in HUBHUBSTERS.PILLARID%type default null 
+,p_ManagerID in HUBHUBSTERS.MANAGERID%type default null 
+,p_Seat in HUBHUBSTERS.SEAT%type default null 
+,p_Phone in HUBHUBSTERS.PHONE%type default null 
+,p_Neighborhood in HUBHUBSTERS.NEIGHBORHOOD%type default null 
+,p_Birthday in HUBHUBSTERS.BIRTHDAY%type default null 
+) IS
+BEGIN
+    UPDATE HUBHUBSTERS set
+    FIRSTNAME = p_FirstName,
+    LASTNAME = p_LastName,
+    PillarID = p_PillarID,
+    ManagerID = p_ManagerID,
+    Seat = p_Seat,
+    Phone = p_Phone,
+    Neighborhood = p_Neighborhood,
+    Birthday = p_Birthday
+    where HUBSTERID = p_HubsterID;
+    Commit;
 End;
 
 '''
