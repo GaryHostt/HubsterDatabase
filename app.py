@@ -40,14 +40,15 @@ def readAndWriteHubsters():
         return jsonify(status='success', db_version=connection.version, data=data)
     
     if request.method == 'POST':
-        p_FirstName = request.form['FirstName']
-        p_LastName = request.form['LastName']
-        p_PillarID = request.form['PillarID']
-        p_ManagerID = request.form['ManagerID']
-        p_Seat = request.form['Seat']
-        p_Phone = request.form['Phone']
-        p_Neighborhood = request.form['Neighborhood']
-        p_Birthday = request.form['Birthday']
+        json_data = request.get_json(force=True)
+        p_FirstName = json_data['FirstName']
+        p_LastName = json_data['LastName']
+        p_PillarID = json_data['PillarID']
+        p_ManagerID = json_data['ManagerID']
+        p_Seat = json_data['Seat']
+        p_Phone = json_data['Phone']
+        p_Neighborhood = json_data['Neighborhood']
+        p_Birthday = json_data['Birthday']
         cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
         for result in cursor.stored_results():
             print(result.fetchall())
@@ -66,8 +67,9 @@ def readAndWritePillars():
         return jsonify(status='success', db_version=connection.version, data=data)
     
     if request.method == 'POST':
-        p_MANAGERID = request.form['MANAGERID']
-        p_PILLARNAME = request.form['PILLARName']
+        json_data = request.get_json(force=True)
+        p_MANAGERID = json_data['MANAGERID']
+        p_PILLARNAME = json_data['PILLARName']
         cursor.callproc('INSERTPILLAR', (p_MANAGERID, p_PILLARNAME))
         for result in cursor.stored_results():
             print(result.fetchall())
