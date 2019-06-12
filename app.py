@@ -74,7 +74,7 @@ def readAndWritePillars():
     connection.commit()
     cursor.close()
 
-@app.route('/api/view/managers', methods=['GET'])
+@app.route('/api/managers', methods=['GET'])
 def viewManagers():
     data=[]
     cursor = connection.cursor()
@@ -83,7 +83,7 @@ def viewManagers():
     cursor.close()
     return jsonify(status='success', db_version=connection.version, data=data)
 
-@app.route('/api/view/rooms', methods=['GET'])
+@app.route('/api/rooms', methods=['GET'])
 def viewRooms():
     data=[]
     cursor = connection.cursor()
