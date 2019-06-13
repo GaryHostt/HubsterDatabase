@@ -30,6 +30,34 @@ cur = connection.cursor()
 def version():
     return jsonify(status='success', db_version=connection.version)
 
+@app.route('/api/hubsters/<HubbbID>', methods=['DELETE', 'GET'])
+def getHubster(HubbbID):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
+        result = cursor.execute(query_string,HubbID=HubbbID)
+        for row in result:
+            data.append(row)
+            #data.append({'HubsterID': row[0], 'Firstname':row[1], 'lastname':row[2], 'pillarid':row[3],'managerid':row[3],'seat':row[4],'phone':row[5],'email':row[6],'neighborhood':row[7]:'birthday':row[8]})
+        return jsonify(status='success', db_version=connection.version, data=data)
+      #  return 'ok',200
+
+#move Put from /api/hubsters endpoint to here?
+
+'''
+@app.errorhandler(404)
+def not_found(error=None):
+    message = {
+        'status': 404,
+        'message': 'Not Found: ' + request.url,
+    }
+    resp = jsonify(message)
+    resp.status_code = 404
+
+    return resp
+'''
+
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
     cursor = connection.cursor()
@@ -72,6 +100,8 @@ def readAndWriteHubsters():
             print(result.fetchall())
     connection.commit()
     cursor.close()
+
+
 
 @app.route('/api/pillars', methods=['GET', 'POST'])
 def readAndWritePillars():
