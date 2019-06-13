@@ -53,8 +53,8 @@ def readAndWriteHubsters():
         for result in cursor.stored_results():
             print(result.fetchall())
         #NEED TO RETURN p_HubsterID in stored proc and here for update ease
-    connection.commit()
-    cursor.close()
+        connection.commit()
+        cursor.close()
 
     if request.method == 'PUT':
         json_data = request.get_json(force=True)
@@ -178,6 +178,43 @@ BEGIN
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
+
+How to call the patch stored procedure (SYNTAX IMPORTANT FOR CALLING STORED PROCS IN SQL DEVELOPER, UPDATEHUBSTER IS THE NAME OF THE STORED PROC):
+DECLARE
+  P_HUBSTERID NUMBER;
+  P_FIRSTNAME VARCHAR2(26);
+  P_LASTNAME VARCHAR2(26);
+  P_PILLARID NUMBER;
+  P_MANAGERID NUMBER;
+  P_SEAT NUMBER;
+  P_PHONE NUMBER;
+  P_NEIGHBORHOOD VARCHAR2(26);
+  P_BIRTHDAY VARCHAR2(255);
+BEGIN
+  P_HUBSTERID := 62;
+  P_FIRSTNAME := NULL;
+  P_LASTNAME := 'success';
+  P_PILLARID := NULL;
+  P_MANAGERID := NULL;
+  P_SEAT := NULL;
+  P_PHONE := NULL;
+  P_NEIGHBORHOOD := NULL;
+  P_BIRTHDAY := NULL;
+
+
+  UPDATEHUBSTER(
+    P_HUBSTERID => P_HUBSTERID,
+    P_FIRSTNAME => P_FIRSTNAME,
+    P_LASTNAME => P_LASTNAME,
+    P_PILLARID => P_PILLARID,
+    P_MANAGERID => P_MANAGERID,
+    P_SEAT => P_SEAT,
+    P_PHONE => P_PHONE,
+    P_NEIGHBORHOOD => P_NEIGHBORHOOD,
+    P_BIRTHDAY => P_BIRTHDAY
+  );
+--rollback; 
+END;
 
 PUT stored procedure below for firstname:
 
