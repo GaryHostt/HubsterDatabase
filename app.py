@@ -52,6 +52,7 @@ def readAndWriteHubsters():
         cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
         for result in cursor.stored_results():
             print(result.fetchall())
+        #NEED TO RETURN p_HubsterID in stored proc and here for update ease
     connection.commit()
     cursor.close()
 
@@ -66,7 +67,7 @@ def readAndWriteHubsters():
         p_Phone = json_data['Phone']
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
-        cursor.callproc('INSERTHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
+        cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
         for result in cursor.stored_results():
             print(result.fetchall())
     connection.commit()
@@ -149,6 +150,10 @@ BEGIN
     
 End;
 
+The stored procedure below is effectively doing a patch on hubsters, 
+https://stackoverflow.com/questions/43612860/update-stored-procedure-only-update-certain-fields-and-leave-others-as-is
+this link has SQL SErver syntax on how to make it a PUT, which is what we want. 
+
 create or replace PROCEDURE updateHubster(
 p_HubsterID in HUBHUBSTERS.HUBSTERID%type
 ,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
@@ -170,6 +175,33 @@ BEGIN
     Phone = p_Phone,
     Neighborhood = p_Neighborhood,
     Birthday = p_Birthday
+    where HUBSTERID = p_HubsterID;
+    Commit;
+End;
+
+PUT stored procedure below for firstname:
+
+create or replace PROCEDURE updateHubster(
+p_HubsterID in HUBHUBSTERS.HUBSTERID%type
+,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
+,p_LastName in HUBHUBSTERS.LASTNAME%type default null
+,p_PillarID in HUBHUBSTERS.PILLARID%type default null 
+,p_ManagerID in HUBHUBSTERS.MANAGERID%type default null 
+,p_Seat in HUBHUBSTERS.SEAT%type default null 
+,p_Phone in HUBHUBSTERS.PHONE%type default null 
+,p_Neighborhood in HUBHUBSTERS.NEIGHBORHOOD%type default null 
+,p_Birthday in HUBHUBSTERS.BIRTHDAY%type default null 
+) IS
+BEGIN
+    UPDATE HUBHUBSTERS set
+    FIRSTNAME = CASE WHEN p_FirstName is null then Firstname else p_FirstName END,
+    LASTNAME = CASE WHEN p_LastName is null then LastName else p_LastName END,
+    PillarID = CASE WHEN p_PillarID is null then PillarID else p_PillarID END,
+    ManagerID = CASE WHEN p_ManagerID is null then ManagerID else p_ManagerID END,
+    Seat = CASE WHEN p_Seat is null then Seat else p_Seat END,
+    Phone = CASE WHEN p_Phone is null then Phone else p_Phone END,
+    Neighborhood = CASE WHEN p_Neighborhood is null then Neighborhood else p_Neighborhood END,
+    Birthday = CASE WHEN p_Birthday is null then Birthday else p_Birthday END
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
