@@ -43,7 +43,13 @@ def getHubster(HubbbID):
         return jsonify(status='success', data=data)
       #  return 'ok',200
 
-   # if request.method =='DELETE':
+    if request.method =='DELETE':
+        data = []
+        query_string = "DELETE FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
+        result = cursor.execute(query_string,HubbID=HubbbID)
+        return jsonify(status='success', data=data)      
+
+
 
 @app.route('/api/hubsters/teams/<pillarrrID>',methods=['GET'])
 def getPillarTeam(pillarrrID):
@@ -55,9 +61,6 @@ def getPillarTeam(pillarrrID):
         for row in result:
             data.append(row)
         return jsonify(status='success', data=data)
-
-
-
 
 @app.route('/api/hubsters/Manager/<managerrrID>',methods=['GET'])
 def getPillarTeamByManager(managerrrID):
@@ -102,6 +105,25 @@ def getManagerByLastname(LastNameee):
         for row in result:
             data.append(row)
         return jsonify(status='success', data=data) 
+
+@app.route('/api/managers/<ManagerrrID>', methods=['DELETE', 'GET'])
+def getManager(ManagerrrID):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBMANAGERS WHERE MANAGERID=:ManagerrID"
+        result = cursor.execute(query_string,MANAGERRID=ManagerrrID)
+        for row in result:
+            data.append(row)
+            #data.append({'HubsterID': row[0], 'Firstname':row[1], 'lastname':row[2], 'pillarid':row[3],'managerid':row[3],'seat':row[4],'phone':row[5],'email':row[6],'neighborhood':row[7]:'birthday':row[8]})
+        return jsonify(status='success', data=data)
+      #  return 'ok',200
+
+    if request.method =='DELETE':
+        data = []
+        query_string = "DELETE FROM HUBManagers WHERE MANAGERID=:MANAGERRID"
+        result = cursor.execute(query_string,MANAGERRID=MANAGERRRID)
+        return jsonify(status='success', data=data)  
 
 @app.route('/api/hubsters/LastName/<LastNameee>',methods=['GET'])
 def getHubsterByLastname(LastNameee):
