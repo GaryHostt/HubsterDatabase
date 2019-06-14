@@ -68,6 +68,28 @@ def getPillarTeamByManager(managerrrID):
             data.append(row)
         return jsonify(status='success', data=data)
 
+@app.route('/api/hubsters/FirstName/<FirstNameee>',methods=['GET'])
+def getHubsterByFirstname(FirstNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBHUBSTERS WHERE FirstName=:FirstNamee"
+        result = cursor.execute(query_string,FirstNamee=FirstNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data)  
+
+@app.route('/api/hubsters/LastName/<LastNameee>',methods=['GET'])
+def getHubsterByLastname(LastNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBHUBSTERS WHERE LastName=:Lastnamee"
+        result = cursor.execute(query_string,LastNamee=LastNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data)  
+
 
 #move Put from /api/hubsters endpoint to here?
 
