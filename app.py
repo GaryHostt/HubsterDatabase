@@ -91,6 +91,17 @@ def getHubsterByLastname(LastNameee):
             data.append(row)
         return jsonify(status='success', data=data)  
 
+@app.route('/api/hubsters/Email/<Emailll>',methods=['GET'])
+def getHUBSTERByEmail(Emailll):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBHUBSTERS WHERE Email=:Emaill"
+        result = cursor.execute(query_string,Emaill=Emailll)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data) 
+
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
     cursor = connection.cursor()
@@ -110,7 +121,8 @@ def readAndWriteHubsters():
         p_Phone = json_data['Phone']
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
-        cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
+        p_Email = json_data['Email']
+        cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email))
         for result in cursor.stored_results():
             print(result.fetchall())
         #NEED TO RETURN p_HubsterID in stored proc and here for update ease
@@ -128,7 +140,8 @@ def readAndWriteHubsters():
         p_Phone = json_data['Phone']
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
-        cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday))
+        p_Email = json_data['Email']
+        cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email))
         for result in cursor.stored_results():
             print(result.fetchall())
     connection.commit()
@@ -156,6 +169,17 @@ def getManagerByLastname(LastNameee):
             data.append(row)
         return jsonify(status='success', data=data) 
 
+@app.route('/api/managers/Email/<Emailll>',methods=['GET'])
+def getManagerByEmail(Emailll):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBMANAGERS WHERE Email=:Emaill"
+        result = cursor.execute(query_string,Emaill=Emailll)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data) 
+
 @app.route('/api/managers/<ManagerrrID>', methods=['DELETE', 'GET'])
 def getManager(ManagerrrID):
     cursor = connection.cursor()
@@ -175,14 +199,30 @@ def getManager(ManagerrrID):
         result = cursor.execute(query_string,MANAGERRID=MANAGERRRID)
         return jsonify(status='success', data=data)  
 
-@app.route('/api/managers', methods=['GET'])
-def viewManagers():
-    data=[]
+@app.route('/api/managers', methods=['GET','PUT'])
+def viewAndUpdateManagers():
     cursor = connection.cursor()
-    for row in cursor.execute("SELECT * FROM HUBMANAGERS"):
-        data.append(row)
+    if request.method =='PUT':
+        data=[]
+        cursor = connection.cursor()
+        for row in cursor.execute("SELECT * FROM HUBMANAGERS"):
+            data.append(row)
+        cursor.close()
+        return jsonify(status='success', db_version=connection.version, data=data)
+
+    if request.method == 'PUT':
+        json_data = request.get_json(force=True)
+        p_FirstName = json_data['FirstName']
+        p_LastName = json_data['LastName']
+        p_ManagerID = json_data['ManagerID']
+        p_Office = json_data['Office']
+        p_Phone = json_data['Phone']
+        p_Email = json_data['Email']
+        cursor.callproc('UPDATEMANAGER', (p_FirstName, p_LastName, p_ManagerID, p_Office, p_Phone, p_Email))
+        for result in cursor.stored_results():
+            print(result.fetchall())
+    connection.commit()
     cursor.close()
-    return jsonify(status='success', db_version=connection.version, data=data)
 
 @app.route('/api/pillars', methods=['GET', 'POST'])
 def readAndWritePillars():
