@@ -57,6 +57,8 @@ def getPillarTeam(pillarrrID):
         return jsonify(status='success', data=data)
 
 
+
+
 @app.route('/api/hubsters/Manager/<managerrrID>',methods=['GET'])
 def getPillarTeamByManager(managerrrID):
     cursor = connection.cursor()
@@ -79,6 +81,28 @@ def getHubsterByFirstname(FirstNameee):
             data.append(row)
         return jsonify(status='success', data=data)  
 
+@app.route('/api/managers/FirstName/<FirstNameee>',methods=['GET'])
+def getManagerByFirstname(FirstNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBManagers WHERE FirstName=:FirstNamee"
+        result = cursor.execute(query_string,FirstNamee=FirstNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data)  
+
+@app.route('/api/managers/LastName/<LastNameee>',methods=['GET'])
+def getManagerByLastname(LastNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBMANAGERS WHERE LastName=:Lastnamee"
+        result = cursor.execute(query_string,LastNamee=LastNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data) 
+
 @app.route('/api/hubsters/LastName/<LastNameee>',methods=['GET'])
 def getHubsterByLastname(LastNameee):
     cursor = connection.cursor()
@@ -89,22 +113,6 @@ def getHubsterByLastname(LastNameee):
         for row in result:
             data.append(row)
         return jsonify(status='success', data=data)  
-
-
-#move Put from /api/hubsters endpoint to here?
-
-'''
-@app.errorhandler(404)
-def not_found(error=None):
-    message = {
-        'status': 404,
-        'message': 'Not Found: ' + request.url,
-    }
-    resp = jsonify(message)
-    resp.status_code = 404
-
-    return resp
-'''
 
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
@@ -148,8 +156,6 @@ def readAndWriteHubsters():
             print(result.fetchall())
     connection.commit()
     cursor.close()
-
-
 
 @app.route('/api/pillars', methods=['GET', 'POST'])
 def readAndWritePillars():
