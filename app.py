@@ -24,8 +24,6 @@ print("This API is now connected with a Jenkins CI/CD Pipeline")
 connection = cx_Oracle.connect(DB_USER, DB_PASSWORD, DB)
 cur = connection.cursor()
 
-#functional? APIs below
-
 @app.route('/api/version', methods=['GET'])
 def version():
     return jsonify(status='success', db_version=connection.version)
@@ -48,8 +46,6 @@ def getHubster(HubbbID):
         query_string = "DELETE FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
         result = cursor.execute(query_string,HubbID=HubbbID)
         return jsonify(status='success', data=data)      
-
-
 
 @app.route('/api/hubsters/teams/<pillarrrID>',methods=['GET'])
 def getPillarTeam(pillarrrID):
@@ -82,47 +78,6 @@ def getHubsterByFirstname(FirstNameee):
         result = cursor.execute(query_string,FirstNamee=FirstNameee)
         for row in result:
             data.append(row)
-        return jsonify(status='success', data=data)  
-
-@app.route('/api/managers/FirstName/<FirstNameee>',methods=['GET'])
-def getManagerByFirstname(FirstNameee):
-    cursor = connection.cursor()
-    if request.method =='GET':
-        data = []
-        query_string = "SELECT * FROM HUBManagers WHERE FirstName=:FirstNamee"
-        result = cursor.execute(query_string,FirstNamee=FirstNameee)
-        for row in result:
-            data.append(row)
-        return jsonify(status='success', data=data)  
-
-@app.route('/api/managers/LastName/<LastNameee>',methods=['GET'])
-def getManagerByLastname(LastNameee):
-    cursor = connection.cursor()
-    if request.method =='GET':
-        data = []
-        query_string = "SELECT * FROM HUBMANAGERS WHERE LastName=:Lastnamee"
-        result = cursor.execute(query_string,LastNamee=LastNameee)
-        for row in result:
-            data.append(row)
-        return jsonify(status='success', data=data) 
-
-@app.route('/api/managers/<ManagerrrID>', methods=['DELETE', 'GET'])
-def getManager(ManagerrrID):
-    cursor = connection.cursor()
-    if request.method =='GET':
-        data = []
-        query_string = "SELECT * FROM HUBMANAGERS WHERE MANAGERID=:ManagerrID"
-        result = cursor.execute(query_string,MANAGERRID=ManagerrrID)
-        for row in result:
-            data.append(row)
-            #data.append({'HubsterID': row[0], 'Firstname':row[1], 'lastname':row[2], 'pillarid':row[3],'managerid':row[3],'seat':row[4],'phone':row[5],'email':row[6],'neighborhood':row[7]:'birthday':row[8]})
-        return jsonify(status='success', data=data)
-      #  return 'ok',200
-
-    if request.method =='DELETE':
-        data = []
-        query_string = "DELETE FROM HUBManagers WHERE MANAGERID=:MANAGERRID"
-        result = cursor.execute(query_string,MANAGERRID=MANAGERRRID)
         return jsonify(status='success', data=data)  
 
 @app.route('/api/hubsters/LastName/<LastNameee>',methods=['GET'])
@@ -179,6 +134,56 @@ def readAndWriteHubsters():
     connection.commit()
     cursor.close()
 
+@app.route('/api/managers/FirstName/<FirstNameee>',methods=['GET'])
+def getManagerByFirstname(FirstNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBManagers WHERE FirstName=:FirstNamee"
+        result = cursor.execute(query_string,FirstNamee=FirstNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data)  
+
+@app.route('/api/managers/LastName/<LastNameee>',methods=['GET'])
+def getManagerByLastname(LastNameee):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBMANAGERS WHERE LastName=:Lastnamee"
+        result = cursor.execute(query_string,LastNamee=LastNameee)
+        for row in result:
+            data.append(row)
+        return jsonify(status='success', data=data) 
+
+@app.route('/api/managers/<ManagerrrID>', methods=['DELETE', 'GET'])
+def getManager(ManagerrrID):
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data = []
+        query_string = "SELECT * FROM HUBMANAGERS WHERE MANAGERID=:ManagerrID"
+        result = cursor.execute(query_string,MANAGERRID=ManagerrrID)
+        for row in result:
+            data.append(row)
+            #data.append({'HubsterID': row[0], 'Firstname':row[1], 'lastname':row[2], 'pillarid':row[3],'managerid':row[3],'seat':row[4],'phone':row[5],'email':row[6],'neighborhood':row[7]:'birthday':row[8]})
+        return jsonify(status='success', data=data)
+      #  return 'ok',200
+
+    if request.method =='DELETE':
+        data = []
+        query_string = "DELETE FROM HUBManagers WHERE MANAGERID=:MANAGERRID"
+        result = cursor.execute(query_string,MANAGERRID=MANAGERRRID)
+        return jsonify(status='success', data=data)  
+
+@app.route('/api/managers', methods=['GET'])
+def viewManagers():
+    data=[]
+    cursor = connection.cursor()
+    for row in cursor.execute("SELECT * FROM HUBMANAGERS"):
+        data.append(row)
+    cursor.close()
+    return jsonify(status='success', db_version=connection.version, data=data)
+
 @app.route('/api/pillars', methods=['GET', 'POST'])
 def readAndWritePillars():
     cursor = connection.cursor()
@@ -200,15 +205,6 @@ def readAndWritePillars():
     connection.commit()
     cursor.close()
 
-@app.route('/api/managers', methods=['GET'])
-def viewManagers():
-    data=[]
-    cursor = connection.cursor()
-    for row in cursor.execute("SELECT * FROM HUBMANAGERS"):
-        data.append(row)
-    cursor.close()
-    return jsonify(status='success', db_version=connection.version, data=data)
-
 @app.route('/api/rooms', methods=['GET'])
 def viewRooms():
     data=[]
@@ -222,7 +218,6 @@ if __name__ == '__main__':
     app.run(host=HOST,
             debug=True,
             port=PORT)
-
 
 ##CRUD stored procedures in database stored here
 '''
