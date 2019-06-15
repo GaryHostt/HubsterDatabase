@@ -38,6 +38,22 @@ def version():
 def getHubster(HubbbID):
     cursor = connection.cursor()
     if request.method =='GET':
+            query_string = ("SELECT * FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID")
+            result = cursor.execute(query_string,HubbID=HubbbID)
+            rows = cursor.fetchall()
+            result = []
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+            for row in rows:
+                result.append(dict(zip(keys,row)))
+            jsonObj = json.dumps(result)
+            return (jsonObj)
+    if request.method =='DELETE':
+        data = []
+        query_string = "DELETE FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
+        result = cursor.execute(query_string,HubbID=HubbbID)
+        return jsonify(status='success', data=data)     
+'''
+    if request.method =='GET':
         data = []
         query_string = "SELECT * FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
         result = cursor.execute(query_string,HubbID=HubbbID)
@@ -46,12 +62,7 @@ def getHubster(HubbbID):
             #data.append({'HubsterID': row[0], 'Firstname':row[1], 'lastname':row[2], 'pillarid':row[3],'managerid':row[3],'seat':row[4],'phone':row[5],'email':row[6],'neighborhood':row[7]:'birthday':row[8]})
         return jsonify(status='success', data=data)
       #  return 'ok',200
-
-    if request.method =='DELETE':
-        data = []
-        query_string = "DELETE FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
-        result = cursor.execute(query_string,HubbID=HubbbID)
-        return jsonify(status='success', data=data)      
+'''
 
 @app.route('/api/hubsters/teams/<pillarrrID>',methods=['GET'])
 def getPillarTeam(pillarrrID):
@@ -78,6 +89,7 @@ def getPillarTeamByManager(managerrrID):
 @app.route('/api/hubsters/FirstName/<FirstNameee>',methods=['GET'])
 def getHubsterByFirstname(FirstNameee):
     cursor = connection.cursor()
+    '''
     if request.method =='GET':
         data = []
         query_string = "SELECT * FROM HUBHUBSTERS WHERE FirstName=:FirstNamee"
@@ -85,10 +97,32 @@ def getHubsterByFirstname(FirstNameee):
         for row in result:
             data.append(row)
         return jsonify(status='success', data=data)  
+    '''
+    if request.method =='GET':
+            query_string = ("SELECT * FROM HUBHUBSTERS WHERE FirstName=:FirstNamee")
+            result = cursor.execute(query_string,FirstNamee=FirstNameee)
+            rows = cursor.fetchall()
+            result = []
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+            for row in rows:
+                result.append(dict(zip(keys,row)))
+            jsonObj = json.dumps(result)
+            return (jsonObj)
 
 @app.route('/api/hubsters/LastName/<LastNameee>',methods=['GET'])
 def getHubsterByLastname(LastNameee):
     cursor = connection.cursor()
+    if request.method =='GET':
+        query_string = ("SELECT * FROM HUBHUBSTERS WHERE LastName=:Lastnamee")
+        result = cursor.execute(query_string,LastNamee=LastNameee)
+        rows = cursor.fetchall()
+        result = []
+        keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+        for row in rows:
+            result.append(dict(zip(keys,row)))
+        jsonObj = json.dumps(result)
+        return (jsonObj)
+'''
     if request.method =='GET':
         data = []
         query_string = "SELECT * FROM HUBHUBSTERS WHERE LastName=:Lastnamee"
@@ -96,6 +130,8 @@ def getHubsterByLastname(LastNameee):
         for row in result:
             data.append(row)
         return jsonify(status='success', data=data)  
+'''
+
 
 @app.route('/api/hubsters/Email/<Emailll>',methods=['GET'])
 def getHUBSTERByEmail(Emailll):
