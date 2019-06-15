@@ -3,6 +3,12 @@ import cx_Oracle
 from passwords import DB, DB_USER, DB_PASSWORD
 from flask import render_template
 from flask import request
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from sqlalchemy import inspect
+from datetime import datetime
+import json
 
 # declare constants for flask app
 HOST = '0.0.0.0'
@@ -105,11 +111,22 @@ def getHUBSTERByEmail(Emailll):
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
     cursor = connection.cursor()
+    '''
     if request.method =='GET':
         data=[]
         for row in cursor.execute("SELECT * FROM HUBHUBSTERS"):
             data.append(row)
-        return jsonify(status='success', db_version=connection.version, data=data)
+        return jsonify(data=data)
+    '''
+    if request.method =='GET':
+            cursor.execute("SELECT * FROM HUBHUBSTERS")
+            rows = cursor.fetchall()
+            result = []
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+            for row in rows:
+                result.append(dict(zip(keys,row)))
+            jsonObj = json.dumps(result)
+            return (jsonObj)
     
     if request.method == 'POST':
         json_data = request.get_json(force=True)
@@ -202,7 +219,7 @@ def getManager(ManagerrrID):
 @app.route('/api/managers', methods=['GET','PUT'])
 def viewAndUpdateManagers():
     cursor = connection.cursor()
-    if request.method =='PUT':
+    if request.method =='GET':
         data=[]
         cursor = connection.cursor()
         for row in cursor.execute("SELECT * FROM HUBMANAGERS"):
@@ -253,6 +270,43 @@ def viewRooms():
         data.append(row)
     cursor.close()
     return jsonify(status='success', db_version=connection.version, data=data)
+
+@app.route('/api/events', methods=['GET', 'POST'])
+def viewAndCreateEvents():
+    cursor = connection.cursor()
+    if request.method =='GET':
+        data=[]
+        cursor = connection.cursor()
+        for row in cursor.execute("SELECT * FROM HUBEVENTS"):
+            data.append(row)
+        cursor.close()
+        return jsonify(status='success', db_version=connection.version, data=data)
+
+    if request.method =='POST':
+        json_data = request.get_json(force=True)
+        p_EventID = json_data['EventID']
+        p_Title = json_data['Title']
+        p_Date = json_data['Date']
+        cursor.callproc('CreateEvent', (p_EventID, p_Title, p_Date))
+        #need to figure out return, it works, but seems like it doesn't
+        for result in cursor.stored_results():
+            print(result.fetchall())
+        connection.commit()
+        cursor.close()
+
+@app.route('/api/events/checkin', methods=['POST'])
+def checkinEvent():
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        p_EventID = json_data['EventID']
+        p_HubsterID = json_data['HubsterID']
+        cursor.callproc('EventCheckIn', (p_EventID, p_HubsterID))
+        #need to figure out return, it works, but seems like it doesn't
+        for result in cursor.stored_results():
+            print(result.fetchall())
+    connection.commit()
+    cursor.close()
 
 if __name__ == '__main__':
     app.run(host=HOST,
@@ -383,5 +437,33 @@ BEGIN
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
+
+create or replace PROCEDURE CreateEvent(
+    p_EventID in HUBEvents.EventID%type default null 
+,p_Title in HUBEvents.Title%type default null
+,p_DateOfEvent in HUBEvents.DateOfEvent%type default null
+
+) IS
+BEGIN
+    INSERT INTO HUBEVENTS ("EVENTID", "TITLE", "DATEOFEVENT")
+    VALUES (p_EventID, p_Title, p_DateOfEvent);
+
+    Commit;
+
+End;
+
+create or replace PROCEDURE EventCheckIn(
+    p_EventID in HUBEvents.EventID%type default null 
+,p_HubsterID in HUBEvents.Title%type default null
+
+) IS
+BEGIN
+    INSERT INTO HUBEventCheckIn ("EVENTID", "HUBSTERID")
+    VALUES (p_EventID, p_HubsterID);
+
+    Commit;
+
+End;
+
 
 '''
