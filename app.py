@@ -6,7 +6,6 @@ from flask import request
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
-from sqlalchemy import inspect
 from datetime import datetime
 import json
 
