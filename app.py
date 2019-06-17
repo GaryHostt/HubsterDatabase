@@ -38,7 +38,7 @@ def getHubster(HubbbID):
             result = cursor.execute(query_string,HubbID=HubbbID)
             rows = cursor.fetchall()
             result = []
-            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY', "OracleEventOpt", "OutsideEventOpt")
             for row in rows:
                 result.append(dict(zip(keys,row)))
             jsonObj = json.dumps(result)
@@ -117,7 +117,7 @@ def getHubsterByLastname(LastNameee):
         for row in rows:
             result.append(dict(zip(keys,row)))
         jsonObj = json.dumps(result)
-        return (jsonObj)
+        return jsonify(jsonObj)
 '''
     if request.method =='GET':
         data = []
@@ -136,9 +136,11 @@ def getHUBSTERByEmail(Emailll):
         data = []
         query_string = "SELECT * FROM HUBHUBSTERS WHERE Email=:Emaill"
         result = cursor.execute(query_string,Emaill=Emailll)
+        keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY','OracleEventOpt', 'OutsideEventOpt', 'hometown', 'picture')
         for row in result:
-            data.append(row)
-        return jsonify(status='success', data=data) 
+            data.append(dict(zip(keys,row)))
+        jsonObj = json.dumps(data)
+        return jsonify(data)
 
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
@@ -154,7 +156,7 @@ def readAndWriteHubsters():
             cursor.execute("SELECT * FROM HUBHUBSTERS")
             rows = cursor.fetchall()
             result = []
-            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY')
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY','OracleEventOpt', 'OutsideEventOpt', 'HOMETOWN', 'picture')
             for row in rows:
                 result.append(dict(zip(keys,row)))
             jsonObj = json.dumps(result)
@@ -173,7 +175,11 @@ def readAndWriteHubsters():
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
         p_Email = json_data['Email']
-        cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email))
+        p_OracleEventOpt = json_data['OracleEventOpt']
+        p_OutsideEventOpt = json_data['OutsideEventOpt']
+        p_hometown = json_data['hometown']
+        p_picture = json_data['picture']
+        cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email,p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture))
         for result in cursor.stored_results():
             print(result.fetchall())
         #NEED TO RETURN p_HubsterID in stored proc and here for update ease
@@ -192,7 +198,11 @@ def readAndWriteHubsters():
         p_Neighborhood = json_data['Neighborhood']
         p_Birthday = json_data['Birthday']
         p_Email = json_data['Email']
-        cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email))
+        p_OracleEventOpt = json_data['OracleEventOpt']
+        p_OutsideEventOpt = json_data['OutsideEventOpt']
+        p_hometown = json_data['hometown']
+        p_picture = json_data['picture']
+        cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email, p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture))
         for result in cursor.stored_results():
             print(result.fetchall())
     connection.commit()
@@ -321,7 +331,8 @@ def viewAndCreateEvents():
         p_EventID = json_data['EventID']
         p_Title = json_data['Title']
         p_Date = json_data['Date']
-        cursor.callproc('CreateEvent', (p_EventID, p_Title, p_Date))
+        p_InsideOrOutside = json_data['InsideOrOutside']
+        cursor.callproc('CreateEvent', (p_EventID, p_Title, p_Date, p_InsideOrOutside))
         #need to figure out return, it works, but seems like it doesn't
         for result in cursor.stored_results():
             print(result.fetchall())
