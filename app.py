@@ -3,9 +3,6 @@ import cx_Oracle
 from passwords import DB, DB_USER, DB_PASSWORD
 from flask import render_template
 from flask import request
-import sqlalchemy
-from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
 from datetime import datetime
 import json
 
