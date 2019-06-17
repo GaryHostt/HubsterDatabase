@@ -158,7 +158,9 @@ def readAndWriteHubsters():
             for row in rows:
                 result.append(dict(zip(keys,row)))
             jsonObj = json.dumps(result)
-            return (jsonObj)
+            print (type(jsonObj))
+            return jsonify(result)
+            
     
     if request.method == 'POST':
         json_data = request.get_json(force=True)
