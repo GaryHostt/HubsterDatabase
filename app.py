@@ -203,8 +203,9 @@ def readAndWriteHubsters():
         p_hometown = json_data['hometown']
         p_picture = json_data['picture']
         cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email, p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture))
-        for result in cursor.stored_results():
-            print(result.fetchall())
+        return jsonify(status='Hubster updated')
+        #for result in cursor.stored_results():
+            #print(result.fetchall())
     connection.commit()
     cursor.close()
 
@@ -348,8 +349,9 @@ def checkinEvent():
         p_HubsterID = json_data['HubsterID']
         cursor.callproc('EventCheckIn', (p_EventID, p_HubsterID))
         #need to figure out return, it works, but seems like it doesn't
-        for result in cursor.stored_results():
-            print(result.fetchall())
+        #for result in cursor.stored_results():
+            #print(result.fetchall())
+        return jsonify(status='Hubster logged')
     connection.commit()
     cursor.close()
 
