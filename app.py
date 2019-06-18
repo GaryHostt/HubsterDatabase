@@ -204,6 +204,7 @@ def readAndWriteHubsters():
         p_picture = json_data['picture']
         cursor.callproc('UPDATEHUBSTER', (p_HubsterID, p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email, p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture))
         return jsonify(status='Hubster updated')
+        #lololol
         #for result in cursor.stored_results():
             #print(result.fetchall())
     connection.commit()
