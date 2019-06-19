@@ -34,15 +34,16 @@ def version():
 def getHubster(HubbbID):
     cursor = connection.cursor()
     if request.method =='GET':
+            data = []
             query_string = ("SELECT * FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID")
             result = cursor.execute(query_string,HubbID=HubbbID)
-            rows = cursor.fetchall()
-            result = []
-            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY', "OracleEventOpt", "OutsideEventOpt")
-            for row in rows:
-                result.append(dict(zip(keys,row)))
-            jsonObj = json.dumps(result)
-            return (jsonObj)
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY', "OracleEventOpt", "OutsideEventOpt", "hometown", "picture")
+            for row in result:
+                data.append(dict(zip(keys,row)))
+            jsonObj = json.dumps(data)
+            return jsonify(data)
+
+
     if request.method =='DELETE':
         data = []
         query_string = "DELETE FROM HUBHUBSTERS WHERE HUBSTERID=:HubbID"
