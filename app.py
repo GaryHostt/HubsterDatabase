@@ -516,3 +516,140 @@ End;
 
 
 '''
+'''
+ALL STORED PROCS AS OF JUNE 19
+
+create or replace PROCEDURE insertHubster(
+    p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
+,p_LastName in HUBHUBSTERS.LASTNAME%type default null
+,p_PillarID in HUBHUBSTERS.PILLARID%type default null 
+,p_ManagerID in HUBHUBSTERS.MANAGERID%type default null 
+,p_Seat in HUBHUBSTERS.SEAT%type default null 
+,p_Phone in HUBHUBSTERS.PHONE%type default null 
+,p_Neighborhood in HUBHUBSTERS.NEIGHBORHOOD%type default null 
+,p_Birthday in HUBHUBSTERS.BIRTHDAY%type default null 
+,p_Email in HUBHUBSTERS.EMAIL%type default null
+,p_OracleEventOpt in HUBHUBSTERS.ORACLEEVENTOPT%type default null
+,p_OutsideEventOpt in HUBHUBSTERS.OUTSIDEEVENTOPT%type default null
+,p_hometown in HUBHUBSTERS.HOMETOWN%type default null
+,p_picture in HUBHUBSTERS.PICTURE%type default null
+) IS
+BEGIN
+    INSERT INTO HUBHUBSTERS ("FIRSTNAME", "LASTNAME", "PILLARID", "MANAGERID", "SEAT", "PHONE", "NEIGHBORHOOD", "BIRTHDAY", "EMAIL", "ORACLEEVENTOPT","OUTSIDEEVENTOPT", "HOMETOWN", "PICTURE")
+    VALUES (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email,p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture);
+
+    Commit;
+
+End;
+
+create or replace PROCEDURE insertPillar(
+    p_MANAGERID in HUBPILLARS.MANAGERID%type default null 
+,p_PILLARNAME in HUBPILLARS.PILLARNAME%type default null
+) IS
+BEGIN
+    INSERT INTO HUBPILLARS ("MANAGERID","PILLARNAME")
+    VALUES (p_ManagerID, p_PillarName);
+
+    Commit;
+
+End;
+
+create or replace PROCEDURE updateHubster(
+p_HubsterID in HUBHUBSTERS.HUBSTERID%type
+,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
+,p_LastName in HUBHUBSTERS.LASTNAME%type default null
+,p_PillarID in HUBHUBSTERS.PILLARID%type default null 
+,p_ManagerID in HUBHUBSTERS.MANAGERID%type default null 
+,p_Seat in HUBHUBSTERS.SEAT%type default null 
+,p_Phone in HUBHUBSTERS.PHONE%type default null 
+,p_Neighborhood in HUBHUBSTERS.NEIGHBORHOOD%type default null 
+,p_Birthday in HUBHUBSTERS.BIRTHDAY%type default null 
+,p_Email in HUBHUBSTERS.EMAIL%type default null 
+,p_OracleEventOpt in HUBHUBSTERS.ORACLEEVENTOPT%type default null
+,p_OutsideEventOpt in HUBHUBSTERS.OUTSIDEEVENTOPT%type default null
+,p_hometown in HUBHUBSTERS.HOMETOWN%type default null
+,p_picture in HUBHUBSTERS.PICTURE%type default null
+) IS
+BEGIN
+    UPDATE HUBHUBSTERS set
+    FIRSTNAME = CASE WHEN p_FirstName is null then Firstname else p_FirstName END,
+    LASTNAME = CASE WHEN p_LastName is null then LastName else p_LastName END,
+    PillarID = CASE WHEN p_PillarID is null then PillarID else p_PillarID END,
+    ManagerID = CASE WHEN p_ManagerID is null then ManagerID else p_ManagerID END,
+    Seat = CASE WHEN p_Seat is null then Seat else p_Seat END,
+    Phone = CASE WHEN p_Phone is null then Phone else p_Phone END,
+    Neighborhood = CASE WHEN p_Neighborhood is null then Neighborhood else p_Neighborhood END,
+    Email = CASE WHEN p_Email is null then Email else p_Email END,
+    Birthday = CASE WHEN p_Birthday is null then Birthday else p_Birthday END,
+    OracleEventOpt = CASE WHEN p_OracleEventOpt is null then OracleEventOpt else p_OracleEventOpt END,
+    OutsideEventOpt = CASE WHEN p_OutsideEventOpt is null then OutsideEventOpt else p_OutsideEventOpt END,
+    hometown = CASE WHEN p_hometown is null then HOMETOWN else p_hometown END,
+    picture = CASE WHEN p_picture is null then picture else p_picture END
+    where HUBSTERID = p_HubsterID;
+    Commit;
+End;
+
+create or replace PROCEDURE updateManager(
+p_FirstName in HUBMANAGERS.FIRSTNAME%type default null 
+,p_LastName in HUBMANAGERS.LASTNAME%type default null
+,p_ManagerID in HUBMANAGERS.MANAGERID%type default null 
+,p_Office in HUBMANAGERS.OFFICE%type default null 
+,p_Phone in HUBMANAGERS.PHONE%type default null 
+,p_Email in HUBMANAGERS.EMAIL%type default null 
+) IS
+BEGIN
+    UPDATE HUBMANAGERS set
+    FIRSTNAME = CASE WHEN p_FirstName is null then Firstname else p_FirstName END,
+    LASTNAME = CASE WHEN p_LastName is null then LastName else p_LastName END,
+    ManagerID = CASE WHEN p_ManagerID is null then ManagerID else p_ManagerID END,
+    Office = CASE WHEN p_Office is null then Office else p_Office END,
+    Phone = CASE WHEN p_Phone is null then Phone else p_Phone END,
+    Email = CASE WHEN p_Email is null then Email else p_Email END
+    where MANAGERID = p_ManagerID;
+    Commit;
+End;
+
+create or replace PROCEDURE CreateEvent(
+    p_EventID in HUBEvents.EventID%type default null 
+,p_Title in HUBEvents.Title%type default null
+,p_DateOfEvent in HUBEvents.DateOfEvent%type default null
+,p_InsideOrOutside in HUBEvents.InsideOrOutside%type default null
+
+) IS
+BEGIN
+    INSERT INTO HUBEVENTS ("EVENTID", "TITLE", "DATEOFEVENT", "INSIDEOROUTSIDE")
+    VALUES (p_EventID, p_Title, p_DateOfEvent, p_InsideOrOutside);
+
+    Commit;
+
+End;
+
+create or replace PROCEDURE EventCheckIn(
+    p_EventID in HUBEvents.EventID%type default null 
+,p_HubsterID in HUBEvents.Title%type default null
+
+) IS
+BEGIN
+    INSERT INTO HUBEventCheckIn ("EVENTID", "HUBSTERID")
+    VALUES (p_EventID, p_HubsterID);
+
+    Commit;
+
+End;
+'''
+'''
+SEPERATE PROJECT STORED PROCS ON SAME DB:
+create or replace PROCEDURE GET_MARKET
+(
+    p_zipcode IN VARCHAR2,
+    p_clientName OUT VARCHAR2,
+    p_marketName OUT VARCHAR2,
+    p_salesRepName OUT VARCHAR2,
+    p_salesRepEmail OUT VARCHAR2,
+    p_salesRepPhoneNum OUT VARCHAR2
+)
+AS
+BEGIN
+    SELECT name, client, salesRepName, salesRepEmail, salesRepPhoneNum INTO p_marketName, p_clientName, p_salesRepName, p_salesRepEmail, p_salesRepPhoneNum FROM Market WHERE Market.zipcode = p_zipcode;
+END;
+'''
