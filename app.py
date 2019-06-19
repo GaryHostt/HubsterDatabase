@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 print("Welcome to the Hubster Database API, Bienvenue a la database des hubsters")
 print("This API is now connected with a Jenkins CI/CD Pipeline")
+print("Bienvenidos a la API")
 
 # update below with your db credentials
 # put your wallet files in a /wallet/network/admin in the project directory
