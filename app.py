@@ -324,10 +324,22 @@ def viewAndCreateEvents():
     if request.method =='GET':
         data=[]
         cursor = connection.cursor()
+        keys = ('EVENTID', 'Title', 'DateOfEvent', 'INSIDEOROUTSIDE')
         for row in cursor.execute("SELECT * FROM HUBEVENTS"):
-            data.append(row)
+            data.append(dict(zip(keys,row)))
         cursor.close()
-        return jsonify(status='success', db_version=connection.version, data=data)
+        return jsonify(data)
+
+    if request.method =='GET':
+            cursor.execute("SELECT * FROM HUBHUBSTERS")
+            rows = cursor.fetchall()
+            result = []
+            keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY','OracleEventOpt', 'OutsideEventOpt', 'HOMETOWN', 'picture')
+            for row in rows:
+                result.append(dict(zip(keys,row)))
+            jsonObj = json.dumps(result)
+            print (type(jsonObj))
+            return jsonify(result)
 
     if request.method =='POST':
         json_data = request.get_json(force=True)
