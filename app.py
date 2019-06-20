@@ -182,8 +182,9 @@ def readAndWriteHubsters():
         p_hometown = json_data['hometown']
         p_picture = json_data['picture']
         cursor.callproc('INSERTHUBSTER', (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email,p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture))
-        for result in cursor.stored_results():
-            print(result.fetchall())
+        return jsonify(status='hubster created')
+        #for result in cursor.stored_results():
+            #print(result.fetchall())
         #NEED TO RETURN p_HubsterID in stored proc and here for update ease
         connection.commit()
         cursor.close()
