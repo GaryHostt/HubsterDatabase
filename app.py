@@ -156,7 +156,7 @@ def readAndWriteHubsters():
         return jsonify(data=data)
     '''
     if request.method =='GET':
-            cursor.execute("SELECT * FROM HUBHUBSTERS")
+            cursor.execute("SELECT * FROM HUBHUBSTERS Order By FirstName")
             rows = cursor.fetchall()
             result = []
             keys = ('HUBSTERID', 'FIRSTNAME', 'LASTNAME', 'PILLARID', 'MANAGERID', 'SEAT', 'PHONE', 'EMAIL', 'NEIGHBORHOOD', 'BIRTHDAY','OracleEventOpt', 'OutsideEventOpt', 'HOMETOWN', 'picture')
