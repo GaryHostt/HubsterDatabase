@@ -361,8 +361,8 @@ def checkinEvent():
     if request.method == 'POST':
         json_data = request.get_json(force=True)
         p_EventID = json_data['EventID']
-        p_HubsterID = json_data['HubsterID']
-        cursor.callproc('EventCheckIn', (p_EventID, p_HubsterID))
+        p_Email = json_data['Email']
+        cursor.callproc('EventCheckIn', (p_EventID, p_Email))
         #need to figure out return, it works, but seems like it doesn't
         #for result in cursor.stored_results():
             #print(result.fetchall())
