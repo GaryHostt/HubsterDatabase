@@ -18,6 +18,7 @@ print("This API is now connected with a Jenkins CI/CD Pipeline")
 print("Bienvenidos a la API")
 print("this will now run on OCI")
 print("running in background")
+print("running in background2")
 
 # update below with your db credentials
 # put your wallet files in a /wallet/network/admin in the project directory
