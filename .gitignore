@@ -11,8 +11,8 @@ credentials.txt
 # System Files
 .DS_Store
 
-#docker image
-Dockerfile
+# ignore wallet files
+./wallet/**/*
 
 #passwords
 passwords.py
