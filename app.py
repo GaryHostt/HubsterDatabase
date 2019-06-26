@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(filename='error.log',level=logging.DEBUG)
+logging.debug('This message should go to the log file')
 from flask import Flask, jsonify
 import cx_Oracle
 from passwords import DB, DB_USER, DB_PASSWORD
@@ -5,6 +8,7 @@ from flask import render_template
 from flask import request
 from datetime import datetime
 import json
+
 
 # declare constants for flask app
 HOST = '0.0.0.0'
@@ -372,6 +376,7 @@ def checkinEvent():
     cursor.close()
 
 if __name__ == '__main__':
+
     app.run(host=HOST,
             debug=True,
             port=PORT)
