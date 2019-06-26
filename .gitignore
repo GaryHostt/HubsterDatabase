@@ -17,5 +17,8 @@ credentials.txt
 #passwords
 passwords.py
 
+#log file
+error.log
+
 #pything
 /__pycache__
