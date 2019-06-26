@@ -65,7 +65,13 @@ Sudo scp - r /Users/aamacdon/Desktop/autonomous_coaching/Wallet_AutoDB opc@132.1
 Sudo scp - r /Users/aamacdon/Desktop/autonomous_coaching/Wallet_AutoDB opc@132.145.172.19:/usr/lib/oracle/18.3/client64/lib/network/admin
 
 
-###Updating Python API
+### Updating Python API
 * Update `app.py` with the ATP credentials
 * Or create a passwords.py file in the project directory with your information
 * Update the endpoints to pull relevant data using SQL
+* [To let Jenkins complete builds with running APIs](https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller)
+    - you lose the console logging capability, but you don't need to abort builds when they're ready
+
+## Some sources
+[Terraform](http://www.ateam-oracle.com/getting-started-using-terraform-with-oci)
+[Jenkins](https://medium.com/dev-blogs/configuring-jenkins-with-github-eef13a5cc9e9)
