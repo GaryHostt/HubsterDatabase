@@ -8,6 +8,7 @@ from flask import render_template
 from flask import request
 from datetime import datetime
 import json
+from flask_cors import CORS
 
 
 # declare constants for flask app
@@ -16,6 +17,8 @@ PORT = 5000
 
 # initialize flask application
 app = Flask(__name__)
+CORS(app)
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Welcome to the Hubster Database API, Bienvenue a la database des hubsters")
 print("This API is now connected with a Jenkins CI/CD Pipeline")
