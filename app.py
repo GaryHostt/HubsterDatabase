@@ -8,7 +8,7 @@ from flask import render_template
 from flask import request
 from datetime import datetime
 import json
-from flask_cors import CORS
+from flask.ext.cors import CORS, cross_origin
 
 
 # declare constants for flask app
