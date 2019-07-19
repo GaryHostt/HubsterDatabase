@@ -82,3 +82,9 @@ DEBUG:root:This message should go to the log file
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 214-014-355
 INFO:werkzeug:127.0.0.1 - - [02/Jul/2019 15:25:44] "[37mGET /api/hubsters/Email/alex.macdonald@oracle.com HTTP/1.1[0m" 200 -
+DEBUG:root:This message should go to the log file
+DEBUG:root:This message should go to the log file
+DEBUG:root:This message should go to the log file
+DEBUG:root:This message should go to the log file
+DEBUG:root:This message should go to the log file
+DEBUG:root:This message should go to the log file

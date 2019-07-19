@@ -3,12 +3,12 @@ logging.basicConfig(filename='error.log',level=logging.DEBUG)
 logging.debug('This message should go to the log file')
 from flask import Flask, jsonify
 import cx_Oracle
-from passwords import DB, DB_USER, DB_PASSWORD
+#from passwords import DB, DB_USER, DB_PASSWORD
 from flask import render_template
 from flask import request
 from datetime import datetime
 import json
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 
 
 # declare constants for flask app
@@ -17,7 +17,7 @@ PORT = 5000
 
 # initialize flask application
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Welcome to the Hubster Database API, Bienvenue a la database des hubsters")
@@ -26,9 +26,9 @@ print("This API is now connected with a Jenkins CI/CD Pipeline")
 # update below with your db credentials
 # put your wallet files in a /wallet/network/admin in the project directory
 
-#DB = '***'
-#DB_USER = '***'
-#DB_PASSWORD = '***'
+DB = '***'
+DB_USER = '***'
+DB_PASSWORD = '***'
 
 connection = cx_Oracle.connect(DB_USER, DB_PASSWORD, DB)
 cur = connection.cursor()
