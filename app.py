@@ -8,7 +8,7 @@ from flask import render_template
 from flask import request
 from datetime import datetime
 import json
-#from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 
 
 # declare constants for flask app
@@ -17,7 +17,7 @@ PORT = 5000
 
 # initialize flask application
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Welcome to the Hubster Database API, Bienvenue a la database des hubsters")
@@ -148,7 +148,9 @@ def getHUBSTERByEmail(Emailll):
         for row in result:
             data.append(dict(zip(keys,row)))
         jsonObj = json.dumps(data)
-        return jsonify(data)
+        resp = jsonify(data)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
 
 @app.route('/api/hubsters', methods=['GET', 'POST', 'PUT'])
 def readAndWriteHubsters():
