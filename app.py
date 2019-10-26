@@ -3,12 +3,12 @@ logging.basicConfig(filename='error.log',level=logging.DEBUG)
 logging.debug('This message should go to the log file')
 from flask import Flask, jsonify
 import cx_Oracle
-#from passwords import DB, DB_USER, DB_PASSWORD
+from passwords import DB, DB_USER, DB_PASSWORD
 from flask import render_template
 from flask import request
 from datetime import datetime
 import json
-#from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 
 
 # declare constants for flask app
@@ -17,7 +17,7 @@ PORT = 5000
 
 # initialize flask application
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Welcome to the Hubster Database API, Bienvenue a la database des hubsters")
@@ -26,9 +26,9 @@ print("This API is now connected with a Jenkins CI/CD Pipeline")
 # update below with your db credentials
 # put your wallet files in a /wallet/network/admin in the project directory
 
-DB = '***'
-DB_USER = '***'
-DB_PASSWORD = '***'
+#DB = '***'
+#DB_USER = '***'
+#DB_PASSWORD = '***'
 
 connection = cx_Oracle.connect(DB_USER, DB_PASSWORD, DB)
 cur = connection.cursor()
@@ -172,8 +172,8 @@ def readAndWriteHubsters():
             jsonObj = json.dumps(result)
             print (type(jsonObj))
             return jsonify(result)
-
-
+            
+    
     if request.method == 'POST':
         json_data = request.get_json(force=True)
         p_FirstName = json_data['FirstName']
@@ -308,7 +308,7 @@ def readAndWritePillars():
             data.append(row)
         cursor.close()
         return jsonify(status='success', db_version=connection.version, data=data)
-
+    
     if request.method == 'POST':
         json_data = request.get_json(force=True)
         p_MANAGERID = json_data['MANAGERID']
@@ -398,6 +398,7 @@ BEGIN
     Commit;
     
 End;
+
 CREATE OR REPLACE PROCEDURE insertHubster(
     p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
 ,p_LastName in HUBHUBSTERS.LASTNAME%type default null
@@ -415,9 +416,11 @@ BEGIN
     Commit;
     
 End;
+
 The stored procedure below is effectively doing a patch on hubsters, 
 https://stackoverflow.com/questions/43612860/update-stored-procedure-only-update-certain-fields-and-leave-others-as-is
 this link has SQL SErver syntax on how to make it a PUT, which is what we want. 
+
 create or replace PROCEDURE updateHubster(
 p_HubsterID in HUBHUBSTERS.HUBSTERID%type
 ,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
@@ -442,6 +445,7 @@ BEGIN
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
+
 How to call the patch stored procedure (SYNTAX IMPORTANT FOR CALLING STORED PROCS IN SQL DEVELOPER, UPDATEHUBSTER IS THE NAME OF THE STORED PROC):
 DECLARE
   P_HUBSTERID NUMBER;
@@ -463,6 +467,8 @@ BEGIN
   P_PHONE := NULL;
   P_NEIGHBORHOOD := NULL;
   P_BIRTHDAY := NULL;
+
+
   UPDATEHUBSTER(
     P_HUBSTERID => P_HUBSTERID,
     P_FIRSTNAME => P_FIRSTNAME,
@@ -476,7 +482,9 @@ BEGIN
   );
 --rollback; 
 END;
+
 PUT stored procedure below for firstname:
+
 create or replace PROCEDURE updateHubster(
 p_HubsterID in HUBHUBSTERS.HUBSTERID%type
 ,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
@@ -501,28 +509,39 @@ BEGIN
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
+
 create or replace PROCEDURE CreateEvent(
     p_EventID in HUBEvents.EventID%type default null 
 ,p_Title in HUBEvents.Title%type default null
 ,p_DateOfEvent in HUBEvents.DateOfEvent%type default null
+
 ) IS
 BEGIN
     INSERT INTO HUBEVENTS ("EVENTID", "TITLE", "DATEOFEVENT")
     VALUES (p_EventID, p_Title, p_DateOfEvent);
+
     Commit;
+
 End;
+
 create or replace PROCEDURE EventCheckIn(
     p_EventID in HUBEvents.EventID%type default null 
 ,p_HubsterID in HUBEvents.Title%type default null
+
 ) IS
 BEGIN
     INSERT INTO HUBEventCheckIn ("EVENTID", "HUBSTERID")
     VALUES (p_EventID, p_HubsterID);
+
     Commit;
+
 End;
+
+
 '''
 '''
 ALL STORED PROCS AS OF JUNE 19
+
 create or replace PROCEDURE insertHubster(
     p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
 ,p_LastName in HUBHUBSTERS.LASTNAME%type default null
@@ -541,8 +560,11 @@ create or replace PROCEDURE insertHubster(
 BEGIN
     INSERT INTO HUBHUBSTERS ("FIRSTNAME", "LASTNAME", "PILLARID", "MANAGERID", "SEAT", "PHONE", "NEIGHBORHOOD", "BIRTHDAY", "EMAIL", "ORACLEEVENTOPT","OUTSIDEEVENTOPT", "HOMETOWN", "PICTURE")
     VALUES (p_FirstName, p_LastName, p_PillarID, p_ManagerID, p_Seat, p_Phone, p_Neighborhood, p_Birthday, p_Email,p_OracleEventOpt, p_OutsideEventOpt, p_hometown, p_picture);
+
     Commit;
+
 End;
+
 create or replace PROCEDURE insertPillar(
     p_MANAGERID in HUBPILLARS.MANAGERID%type default null 
 ,p_PILLARNAME in HUBPILLARS.PILLARNAME%type default null
@@ -550,8 +572,11 @@ create or replace PROCEDURE insertPillar(
 BEGIN
     INSERT INTO HUBPILLARS ("MANAGERID","PILLARNAME")
     VALUES (p_ManagerID, p_PillarName);
+
     Commit;
+
 End;
+
 create or replace PROCEDURE updateHubster(
 p_HubsterID in HUBHUBSTERS.HUBSTERID%type
 ,p_FirstName in HUBHUBSTERS.FIRSTNAME%type default null 
@@ -586,6 +611,7 @@ BEGIN
     where HUBSTERID = p_HubsterID;
     Commit;
 End;
+
 create or replace PROCEDURE updateManager(
 p_FirstName in HUBMANAGERS.FIRSTNAME%type default null 
 ,p_LastName in HUBMANAGERS.LASTNAME%type default null
@@ -605,25 +631,33 @@ BEGIN
     where MANAGERID = p_ManagerID;
     Commit;
 End;
+
 create or replace PROCEDURE CreateEvent(
     p_EventID in HUBEvents.EventID%type default null 
 ,p_Title in HUBEvents.Title%type default null
 ,p_DateOfEvent in HUBEvents.DateOfEvent%type default null
 ,p_InsideOrOutside in HUBEvents.InsideOrOutside%type default null
+
 ) IS
 BEGIN
     INSERT INTO HUBEVENTS ("EVENTID", "TITLE", "DATEOFEVENT", "INSIDEOROUTSIDE")
     VALUES (p_EventID, p_Title, p_DateOfEvent, p_InsideOrOutside);
+
     Commit;
+
 End;
+
 create or replace PROCEDURE EventCheckIn(
     p_EventID in HUBEvents.EventID%type default null 
 ,p_HubsterID in HUBEvents.Title%type default null
+
 ) IS
 BEGIN
     INSERT INTO HUBEventCheckIn ("EVENTID", "HUBSTERID")
     VALUES (p_EventID, p_HubsterID);
+
     Commit;
+
 End;
 '''
 '''
